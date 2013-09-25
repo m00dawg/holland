@@ -3,6 +3,7 @@
 import os
 import errno
 import shutil
+import shlex
 import tempfile
 import logging
 from holland.core.exceptions import BackupError
