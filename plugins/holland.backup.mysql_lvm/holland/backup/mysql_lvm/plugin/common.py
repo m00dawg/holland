@@ -55,13 +55,13 @@ def remove_stale_snapshot(snapshot_device):
         LOG.info("No old snapshots found")
     else:
         snapshot_size = int(float(snapshot.lv_size) *
-                            float(snapshot.snap_percent))
+                            float(snapshot.snap_percent or snapshot.lv_size))
         LOG.info("Found '%s' (lv_attr=%s size=%s)",
                  snapshot.device_name(),
                  snapshot.lv_attr, format_bytes(snapshot_size))
 
         if snapshot.lv_attr[0] != 's':
-            LOG.error("Volume '%s' does not appear to be a snapshot. Aborting."),
+            LOG.error("Volume '%s' does not appear to be a snapshot. Aborting.",
                       snapshot.device_name())
             raise BackupError("Volume '%s' does not appear to be a snapshot. Aborting." %
                               snapshot.device_name())
@@ -94,7 +94,7 @@ def build_snapshot(config, logical_volume, dryrun=False):
                                    logical_volume.vg_name,
                                    snapshot_name)
 
-    if config['remove-old-snapshot']:
+    if config['remove-stale-snapshot']:
         if not dryrun:
             remove_stale_snapshot(snapshot_device)
         else:
@@ -103,6 +103,8 @@ def build_snapshot(config, logical_volume, dryrun=False):
                 LOG.warn("LVM snapshot volume with name '%s' exists: %s",
                          snapshot_name, snapshot_device)
                 LOG.warn("Holland will try to remove this during a normal backup")
+    else:
+        LOG.info("remove-stale-snapshot option is disabled. Not checking for conflicting snapshot")
 
     if not snapshot_size:
         snapshot_size = min(int(logical_volume.vg_free_count),
