@@ -59,6 +59,12 @@ def remove_stale_snapshot(snapshot_device):
         LOG.info("Found '%s' (lv_attr=%s size=%s)",
                  snapshot.device_name(),
                  snapshot.lv_attr, format_bytes(snapshot_size))
+
+        if snapshot.lv_attr[0] != 's':
+            LOG.error("Volume '%s' does not appear to be a snapshot. Aborting."),
+                      snapshot.device_name())
+            raise BackupError("Volume '%s' does not appear to be a snapshot. Aborting." %
+                              snapshot.device_name())
         # Best effort attempt to remove the snapshot
         # We do not jump through hoops if the snapshot volume is busy
         # and simply fail early
