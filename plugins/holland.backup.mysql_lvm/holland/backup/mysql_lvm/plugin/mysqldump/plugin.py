@@ -91,7 +91,7 @@ class MysqlDumpLVMBackup(object):
 
         # create a snapshot manager
         snapshot = build_snapshot(self.config['mysql-lvm'], volume,
-                                  suppress_tmpdir=self.dry_run)
+                                  dryrun=self.dry_run)
         # calculate where the datadirectory on the snapshot will be located
         rpath = relpath(datadir, getmount(datadir))
         snap_datadir = os.path.abspath(os.path.join(snapshot.mountpoint or
