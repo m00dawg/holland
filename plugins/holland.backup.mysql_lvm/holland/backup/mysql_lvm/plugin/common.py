@@ -101,7 +101,10 @@ def build_snapshot(config, logical_volume, suppress_tmpdir=False):
                                   str(exc))
 
 
-    snapshot = Snapshot(snapshot_name, int(snapshot_size), mountpoint, create_options)
+    snapshot = Snapshot(snapshot_name,
+                        int(snapshot_size), 
+                        mountpoint,
+                        snapshot_create_options)
     if tempdir:
         snapshot.register('finish',
                           lambda *args, **kwargs: cleanup_tempdir(mountpoint))
