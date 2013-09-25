@@ -200,7 +200,7 @@ class LogicalVolume(Volume):
         """
 
         try:
-            lvsnapshot(self.device_name(), name, size, create_options)
+            lvsnapshot(self.device_name(), name, size, options=create_options)
         except LVMCommandError, exc:
             for line in exc.error.splitlines():
                 LOG.error("%s", line)
