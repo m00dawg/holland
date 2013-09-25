@@ -106,7 +106,11 @@ def parse_lvm_format(keys, values):
     for row in csv.reader(stream, delimiter=',', skipinitialspace=True):
         yield dict(zip(keys, row))
 
-def lvsnapshot(orig_lv_path, snapshot_name, snapshot_extents, chunksize=None):
+def lvsnapshot(orig_lv_path,
+               snapshot_name,
+               snapshot_extents,
+               chunksize=None,
+               options=()):
     """Create a snapshot of an existing logical volume
 
     :param snapshot_lv_name: name of the snapshot
@@ -125,6 +129,9 @@ def lvsnapshot(orig_lv_path, snapshot_name, snapshot_extents, chunksize=None):
     if chunksize:
         lvcreate_args.insert(-1, '--chunksize')
         lvcreate_args.insert(-1, chunksize)
+
+    # inject user options right before the logical volume
+    lvcreate_args[-2:-1] = list(options)
 
     LOG.debug("%s", list2cmdline(lvcreate_args))
     process = Popen(lvcreate_args,
