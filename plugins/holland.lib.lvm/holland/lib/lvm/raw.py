@@ -125,7 +125,6 @@ def lvsnapshot(orig_lv_path,
         '--snapshot',
         '--name', snapshot_name,
         '--extents', "%d" % snapshot_extents,
-        orig_lv_path,
     ]
 
     if chunksize:
@@ -133,9 +132,11 @@ def lvsnapshot(orig_lv_path,
         lvcreate_args.insert(-1, chunksize)
 
     # inject user options right before the logical volume
-    lvcreate_args[-2:-1] = list(options)
+    lvcreate_args.extend(list(options))
 
-    LOG.debug("%s", list2cmdline(lvcreate_args))
+    lvcreate_args.append(orig_lv_path)
+
+    LOG.info("%s", list2cmdline(lvcreate_args))
     process = Popen(lvcreate_args,
                     stdout=PIPE,
                     stderr=PIPE,
