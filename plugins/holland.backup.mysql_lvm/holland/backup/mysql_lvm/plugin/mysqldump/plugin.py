@@ -27,7 +27,9 @@ snapshot-size = string(default=None)
 # default: temporary directory
 snapshot-mountpoint = string(default=None)
 
-remove-old-snapshot = boolean(default=yes)
+# toggle behavior of removing a conflicting snapshot
+# name priorto starting backup
+remove-stale-snapshot = boolean(default=yes)
 
 # default: flush tables with read lock by default
 lock-tables = boolean(default=yes)

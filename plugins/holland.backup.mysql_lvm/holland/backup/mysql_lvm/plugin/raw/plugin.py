@@ -25,7 +25,9 @@ snapshot-size = string(default=None)
 # default: temporary directory
 snapshot-mountpoint = string(default=None)
 
-remove-old-snapshots = boolean(default=yes)
+# toggle behavior of removing a conflicting snapshot
+# name priorto starting backup
+remove-stale-snapshot = boolean(default=yes)
 
 # default: no
 innodb-recovery = boolean(default=no)
