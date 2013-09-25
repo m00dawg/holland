@@ -88,14 +88,15 @@ def build_snapshot(config, logical_volume, dryrun=False):
                                    logical_volume.vg_name,
                                    snapshot_name)
 
-    if not dryrun:
-        remove_stale_snapshot(snapshot_device)
-    else:
-        # Warn about an existing snapshot name during dryrun
-        if os.path.exists(snapshot_device):
-            LOG.warn("LVM snapshot volume with name '%s' exists: %s",
-                     snapshot_name, snapshot_device)
-            LOG.warn("Holland will try to remove this during a normal backup")
+    if config['remove-old-snapshot']:
+        if not dryrun:
+            remove_stale_snapshot(snapshot_device)
+        else:
+            # Warn about an existing snapshot name during dryrun
+            if os.path.exists(snapshot_device):
+                LOG.warn("LVM snapshot volume with name '%s' exists: %s",
+                         snapshot_name, snapshot_device)
+                LOG.warn("Holland will try to remove this during a normal backup")
 
     if not snapshot_size:
         snapshot_size = min(int(logical_volume.vg_free_count),

@@ -25,6 +25,8 @@ snapshot-size = string(default=None)
 # default: temporary directory
 snapshot-mountpoint = string(default=None)
 
+remove-old-snapshots = boolean(default=yes)
+
 # default: no
 innodb-recovery = boolean(default=no)
 
