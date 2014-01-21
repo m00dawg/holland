@@ -49,6 +49,10 @@ def setup_actions(snapshot, config, client, datadir, spooldir, plugin):
         if ib_log_size:
             mysqld_config['innodb-log-file-size'] = ib_log_size
 
+        ib_log_count = client.show_variable('innodb_log_files_in_group')
+        if ib_log_count:
+            mysqld_config['innodb-log-files-in-group'] = ib_log_count
+
         ibd_home_dir = pathinfo.innodb_data_home_dir
         if ibd_home_dir:
             # innodb_data_home_dir is set to something
