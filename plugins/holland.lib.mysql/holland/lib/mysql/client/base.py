@@ -335,7 +335,7 @@ class MySQLClient(object):
         try:
             if cursor.execute(sql):
                 for info in cursor.fetchall():
-                    engine, support = info[0:1]
+                    engine, support = info[0:2]
                     if engine.lower() == name.lower():
                         return support in ('DEFAULT', 'YES')
                 return False
