@@ -55,7 +55,8 @@ def setup_actions(snapshot, config, client, snap_datadir, spooldir):
         # also set innodb-log-files-in-group to support non-standard configs
         ib_log_count = client.show_variable('innodb_log_files_in_group')
         if ib_log_count:
-            mysqld_config['innodb-log-files-in-group'] = ib_log_count act = InnodbRecoveryAction(mysqld_config)
+            mysqld_config['innodb-log-files-in-group'] = ib_log_count
+        act = InnodbRecoveryAction(mysqld_config)
 
         snapshot.register('post-mount', act, priority=100)
 
