@@ -44,6 +44,7 @@ user                    = string(default='mysql')
 innodb-buffer-pool-size = string(default=128M)
 tmpdir                  = string(default=None)
 mysqld-options          = string(default='')
+include-defaults-files  = force_list(default=list())
 
 [tar]
 exclude = force_list(default='mysql.sock')

@@ -26,8 +26,10 @@ class InnodbRecoveryAction(object):
         mycnf_path = os.path.join(self.mysqld_config['datadir'], 
                                   'my.innodb_recovery.cnf')
         self.mysqld_config['log-error'] = 'innodb_recovery.log'
+        include_defaults = self.mysqld_config['include-defaults-files']
         my_conf = generate_server_config(self.mysqld_config,
-                                         mycnf_path)
+                                         mycnf_path,
+                                         includes=include_defaults)
         
         my_opts = self.mysqld_config['mysqld-options']
 

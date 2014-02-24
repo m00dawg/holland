@@ -78,7 +78,7 @@ class MySQLServer(object):
         self.stop()
         self.start()
 
-def generate_server_config(config, path):
+def generate_server_config(config, path, includes=()):
     conf_data = StringIO()
     valid_params = [
         'innodb-buffer-pool-size',
@@ -97,6 +97,15 @@ def generate_server_config(config, path):
         'pid-file',
         'port',
     ]
+
+    for name in in includes:
+        if os.path.isfile(name):
+            print >>conf_data, "!include %s" % name
+        elif os.path.isdir(name):
+            print >>conf, data, "!includedir %s" % name
+        else:
+            LOG.warning("Not including '%s' in %s - not a file or directory",
+                        name, path)
     print >>conf_data, "[mysqld]"
     for key, value in config.iteritems():
         if key.replace('_', '-') not in valid_params:
