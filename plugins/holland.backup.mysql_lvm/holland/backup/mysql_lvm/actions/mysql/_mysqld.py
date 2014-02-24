@@ -111,5 +111,9 @@ def generate_server_config(config, path):
     print >>conf_data, "skip-log-bin"
     text = conf_data.getvalue()
     LOG.debug("Generating config: %s", text)
-    open(path, 'w').write(text)
+    fileobj = open(path, 'wb')
+    try:
+        fileobj.write(text.encode('utf8'))
+    finally:
+        fileobj.close()
     return path
