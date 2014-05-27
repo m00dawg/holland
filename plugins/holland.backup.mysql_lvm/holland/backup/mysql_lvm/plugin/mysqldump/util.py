@@ -42,13 +42,17 @@ def setup_actions(snapshot, config, client, datadir, spooldir, plugin):
     if not mysqld_config['tmpdir']:
         mysqld_config['tmpdir'] = tempfile.gettempdir()
 
-    if client.is_engine_enable('InnoDB'):
+    if client.is_engine_enabled('InnoDB'):
         pathinfo = MySQLPathInfo.from_mysql(client)
         check_innodb(pathinfo)
 
         ib_log_size = client.show_variable('innodb_log_file_size')
         if ib_log_size:
             mysqld_config['innodb-log-file-size'] = ib_log_size
+
+        ib_log_count = client.show_variable('innodb_log_files_in_group')
+        if ib_log_count:
+            mysqld_config['innodb-log-files-in-group'] = ib_log_count
 
         ibd_home_dir = pathinfo.innodb_data_home_dir
         if ibd_home_dir:

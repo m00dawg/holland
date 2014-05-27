@@ -83,6 +83,7 @@ def generate_server_config(config, path, includes=()):
     valid_params = [
         'innodb-buffer-pool-size',
         'innodb-log-file-size',
+        'innodb-log-files-in-group',
         'innodb-log-group-home-dir',
         'innodb-data-home-dir',
         'innodb-data-file-path',
