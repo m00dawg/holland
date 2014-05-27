@@ -31,7 +31,7 @@ class MySQLDumpDispatchAction(object):
                                                       'holland_lvm.pid')
         mycnf_path = os.path.join(datadir, 'my.bootstrap.cnf')
         # generate a my.cnf to pass to the mysqld bootstrap
-        include_defaults = self.mysqld_config['include-default-files']
+        include_defaults = self.mysqld_config['include-defaults-files']
         my_conf = generate_server_config(self.mysqld_config,
                                          mycnf_path,
                                          include_defaults)
