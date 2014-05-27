@@ -98,7 +98,7 @@ def generate_server_config(config, path, includes=()):
         'port',
     ]
 
-    for name in in includes:
+    for name in includes:
         if os.path.isfile(name):
             print >>conf_data, "!include %s" % name
         elif os.path.isdir(name):
