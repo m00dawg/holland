@@ -19,10 +19,10 @@ class FlushAndLockMySQLAction(object):
     def __call__(self, event, snapshot_fsm, snapshot_vol):
         if event == 'pre-snapshot':
             if self.stop_slave:
+                LOG.info("mysql> STOP SLAVE SQL_THREAD;")
                 click = time.time()
                 self.client.stop_slave(sql_thread_only=True)
                 self.slave_stopped_when = time.time()
-                LOG.info("mysql> STOP SLAVE SQL_THREAD;")
                 LOG.info("- Stopped in %.3f seconds", time.time() - click)
             if self.extra_flush:
                 click = time.time()
