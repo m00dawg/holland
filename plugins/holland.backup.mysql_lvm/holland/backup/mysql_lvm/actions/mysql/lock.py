@@ -21,7 +21,7 @@ class FlushAndLockMySQLAction(object):
             if self.stop_slave:
                 click = time.time()
                 self.client.stop_slave(sql_thread_only=True)
-                self.slaved_stopped_when = time.time()
+                self.slave_stopped_when = time.time()
                 LOG.info("mysql> STOP SLAVE SQL_THREAD;")
                 LOG.info("- Stopped in %.3f seconds", time.time() - click)
             if self.extra_flush:
