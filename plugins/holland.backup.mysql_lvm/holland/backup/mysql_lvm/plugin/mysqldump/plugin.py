@@ -34,6 +34,10 @@ lock-tables = boolean(default=yes)
 #          run flush tables with read lock
 extra-flush-tables = boolean(default=yes)
 
+# Execute STOP SLAVE SQL_THREAD prior to locking or
+# creating snapshot.
+stop-slave = boolean(default=no)
+
 [mysqld]
 mysqld-exe              = force_list(default=list('mysqld', '/usr/libexec/mysqld'))
 user                    = string(default='mysql')

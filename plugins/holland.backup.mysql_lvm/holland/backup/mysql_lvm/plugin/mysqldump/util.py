@@ -26,9 +26,12 @@ def setup_actions(snapshot, config, client, datadir, spooldir, plugin):
         * Recording MySQL replication
     """
 
-    if config['mysql-lvm']['lock-tables']:
+    if config['mysql-lvm']['lock-tables'] or config['mysql-lvm']['stop-slave']:
         extra_flush = config['mysql-lvm']['extra-flush-tables']
-        act = FlushAndLockMySQLAction(client, extra_flush)
+        act = FlushAndLockMySQLAction(client=client,
+                                      lock_tables=config['mysql-lvm']['lock-tables'],
+                                      extra_flush=extra_flush,
+                                      stop_slave=config['mysql-lvm']['stop-slave'])
         snapshot.register('pre-snapshot', act, priority=100)
         snapshot.register('post-snapshot', act, priority=100)
     if config['mysql-lvm'].get('replication', True):

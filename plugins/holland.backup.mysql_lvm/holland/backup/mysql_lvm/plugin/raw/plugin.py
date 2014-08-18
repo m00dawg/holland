@@ -38,6 +38,11 @@ lock-tables = boolean(default=yes)
 #          run flush tables with read lock
 extra-flush-tables = boolean(default=yes)
 
+
+# Execute STOP SLAVE SQL_THREAD prior to locking or
+# creating a snapshot
+stop-slave = boolean(default=no)
+
 [mysqld]
 mysqld-exe              = force_list(default=list('mysqld', '/usr/libexec/mysqld'))
 user                    = string(default='mysql')
@@ -75,7 +80,7 @@ socket = string(default=None)
 """.splitlines()
 
 class MysqlLVMBackup(object):
-    """A Holland Backup plugin suitable for performing LVM snapshots of a 
+    """A Holland Backup plugin suitable for performing LVM snapshots of a
     filesystem underlying a live MySQL instance.
 
     This plugin produces tar archives of a MySQL data directory.
