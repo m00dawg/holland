@@ -26,7 +26,7 @@ class FlushAndLockMySQLAction(object):
                 LOG.info("- Stopped in %.3f seconds", time.time() - click)
             if self.extra_flush:
                 click = time.time()
-                LOG.info("mysql> FLUSH TABLES")
+                LOG.info("mysql> FLUSH /*!40101 LOCAL */ TABLES;");
                 self.client.flush_tables()
                 LOG.info("- Tables flushed in %.3f seconds", time.time() - click)
             if self.lock_tables:
