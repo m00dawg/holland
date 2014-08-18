@@ -23,14 +23,15 @@ class InnodbRecoveryAction(object):
         mysqld_exe = locate_mysqld_exe(self.mysqld_config)
         LOG.info("Bootstrapping with %s", mysqld_exe)
 
-        mycnf_path = os.path.join(self.mysqld_config['datadir'], 
-                                  'my.innodb_recovery.cnf')
-        self.mysqld_config['log-error'] = 'innodb_recovery.log'
-        my_conf = generate_server_config(self.mysqld_config,
-                                         mycnf_path)
+        datadir = self.mysqld_config['datadir']
+        mycnf_path = os.path.join(datadir, 'my.innodb_recovery.cnf')
+        self.mysqld_config['log-error'] = os.path.join(datadir,
+                                                       'innodb_recovery.log')
+        my_conf = generate_server_config(self.mysqld_config, mycnf_path)
         
         mysqld = MySQLServer(mysqld_exe, my_conf)
-        mysqld.start(bootstrap=True)
+        mysqld.start(bootstrap=True,
+                     stdout=self.mysqld_config['log-error'])
 
         while mysqld.poll() is None:
             if signal.SIGINT in snapshot_fsm.sigmgr.pending:

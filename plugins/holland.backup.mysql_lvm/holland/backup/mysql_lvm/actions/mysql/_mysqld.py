@@ -33,7 +33,7 @@ class MySQLServer(object):
         self.returncode = None
         self.process = None
 
-    def start(self, bootstrap=False):
+    def start(self, bootstrap=False, stdout=None):
         args = [
             self.mysqld_exe,
             '--defaults-file=%s' % self.defaults_file,
@@ -42,10 +42,14 @@ class MySQLServer(object):
             args += ['--bootstrap']
         self.returncode = None
         LOG.info("Starting %s", list2cmdline(args))
+        if stdout is None:
+            stdout = open('/dev/null', 'wb')
+        else:
+            stdout = open(stdout, 'wb')
         self.process = Popen(args,
                              preexec_fn=os.setsid,
                              stdin=open('/dev/null', 'r'),
-                             stdout=open('/dev/null', 'w'),
+                             stdout=stdout,
                              stderr=STDOUT,
                              close_fds=True)
     def stop(self):
