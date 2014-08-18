@@ -26,8 +26,10 @@ snapshot-size = string(default=None)
 snapshot-mountpoint = string(default=None)
 
 # toggle behavior of removing a conflicting snapshot
-# name priorto starting backup
+# name prior to starting backup
 remove-stale-snapshot = boolean(default=yes)
+
+snapshot-create-options = string(default='')
 
 # default: no
 innodb-recovery = boolean(default=no)

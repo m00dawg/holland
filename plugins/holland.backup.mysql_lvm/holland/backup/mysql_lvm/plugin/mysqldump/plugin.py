@@ -31,6 +31,8 @@ snapshot-mountpoint = string(default=None)
 # name priorto starting backup
 remove-stale-snapshot = boolean(default=yes)
 
+snapshot-create-options = string(default='')
+
 # default: flush tables with read lock by default
 lock-tables = boolean(default=yes)
 
