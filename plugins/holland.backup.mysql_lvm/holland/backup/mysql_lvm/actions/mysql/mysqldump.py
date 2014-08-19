@@ -32,6 +32,7 @@ class MySQLDumpDispatchAction(object):
         mycnf_path = os.path.join(datadir, 'my.bootstrap.cnf')
         # generate a my.cnf to pass to the mysqld bootstrap
         include_defaults = self.mysqld_config['include-defaults-files']
+        extra_opts = self.mysqld_config.pop('mysqld-options', [])
         my_conf = generate_server_config(self.mysqld_config,
                                          mycnf_path,
                                          include_defaults)
@@ -39,7 +40,7 @@ class MySQLDumpDispatchAction(object):
         # log-bin is disabled to avoid conflict with the normal mysqld process
         self.mysqldump_plugin.config['mysqldump']['bin-log-position'] = False
 
-        mysqld = MySQLServer(mysqld_exe, my_conf)
+        mysqld = MySQLServer(mysqld_exe, my_conf, extra_opts)
         mysqld.start(bootstrap=False)
         LOG.info("Waiting for %s to start", mysqld_exe)
 
