@@ -1,6 +1,7 @@
 """Utility functions to help out the mysql-lvm plugin"""
 import os
 import shutil
+import shlex
 import tempfile
 import logging
 from holland.core.backup import BackupError
@@ -55,7 +56,21 @@ def setup_actions(snapshot, config, client, snap_datadir, spooldir):
             mysqld_config['tmpdir'] = tempfile.gettempdir()
         ib_log_size = client.show_variable('innodb_log_file_size')
         mysqld_config['innodb-log-file-size'] = ib_log_size
+
+        # also set innodb-log-files-in-group to support non-standard configs
+        ib_log_count = client.show_variable('innodb_log_files_in_group')
+        if ib_log_count:
+            mysqld_config['innodb-log-files-in-group'] = ib_log_count
+
+        if mysqld_config['mysqld-options']:
+            opts = mysqld_config['mysqld-options'].decode('utf8')
+            argv = shlex.split(opts)
+            mysqld_config['mysqld-options'] = argv
+            del argv
+            del opts
+
         act = InnodbRecoveryAction(mysqld_config)
+
         snapshot.register('post-mount', act, priority=100)
 
     try:

@@ -50,6 +50,8 @@ user                    = string(default='mysql')
 innodb-buffer-pool-size = string(default=128M)
 key-buffer-size         = string(default=16M)
 tmpdir                  = string(default=None)
+mysqld-options          = string(default='')
+include-defaults-files  = force_list(default=list())
 
 """.splitlines() + MySQLDumpPlugin.CONFIGSPEC
 

@@ -27,11 +27,12 @@ def locate_mysqld_exe(config):
     raise BackupError("Failed to find mysqld binary")
 
 class MySQLServer(object):
-    def __init__(self, mysqld_exe, defaults_file):
+    def __init__(self, mysqld_exe, defaults_file, options=()):
         self.mysqld_exe = mysqld_exe
         self.defaults_file = defaults_file
         self.returncode = None
         self.process = None
+        self.options = options
 
     def start(self, bootstrap=False, stdout=None):
         args = [
@@ -40,6 +41,8 @@ class MySQLServer(object):
         ]
         if bootstrap:
             args += ['--bootstrap']
+        if self.options:
+            args.extend(self.options)
         self.returncode = None
         LOG.info("Starting %s", list2cmdline(args))
         if stdout is None:
@@ -79,11 +82,12 @@ class MySQLServer(object):
         self.stop()
         self.start()
 
-def generate_server_config(config, path):
+def generate_server_config(config, path, includes=()):
     conf_data = StringIO()
     valid_params = [
         'innodb-buffer-pool-size',
         'innodb-log-file-size',
+        'innodb-log-files-in-group',
         'innodb-log-group-home-dir',
         'innodb-data-home-dir',
         'innodb-data-file-path',
@@ -98,6 +102,15 @@ def generate_server_config(config, path):
         'pid-file',
         'port',
     ]
+
+    for name in includes:
+        if os.path.isfile(name):
+            print >>conf_data, "!include %s" % name
+        elif os.path.isdir(name):
+            print >>conf, data, "!includedir %s" % name
+        else:
+            LOG.warning("Not including '%s' in %s - not a file or directory",
+                        name, path)
     print >>conf_data, "[mysqld]"
     for key, value in config.iteritems():
         if key.replace('_', '-') not in valid_params:
@@ -112,5 +125,9 @@ def generate_server_config(config, path):
     print >>conf_data, "skip-log-bin"
     text = conf_data.getvalue()
     LOG.debug("Generating config: %s", text)
-    open(path, 'w').write(text)
+    fileobj = open(path, 'wb')
+    try:
+        fileobj.write(text.encode('utf8'))
+    finally:
+        fileobj.close()
     return path

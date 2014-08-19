@@ -1,5 +1,6 @@
 """Utility functions to help out the mysql-lvm plugin"""
 import os
+import shlex
 import shutil
 import tempfile
 import logging
@@ -52,6 +53,10 @@ def setup_actions(snapshot, config, client, datadir, spooldir, plugin):
         if ib_log_size:
             mysqld_config['innodb-log-file-size'] = ib_log_size
 
+        ib_log_count = client.show_variable('innodb_log_files_in_group')
+        if ib_log_count:
+            mysqld_config['innodb-log-files-in-group'] = ib_log_count
+
         ibd_home_dir = pathinfo.innodb_data_home_dir
         if ibd_home_dir:
             # innodb_data_home_dir is set to something
@@ -82,6 +87,13 @@ def setup_actions(snapshot, config, client, datadir, spooldir, plugin):
             mysqld_config['innodb-log-group-home-dir'] = ib_logdir
             LOG.info("Remapped innodb-log-group-home-dir from %s to %s for snapshot",
                      pathinfo.get_innodb_logdir(), ib_logdir)
+
+    if mysqld_config['mysqld-options']:
+        opts = mysqld_config['mysqld-options'].decode('utf8')
+        argv = shlex.split(opts)
+        mysqld_config['mysqld-options'] = argv
+        del argv
+        del opts
 
     act = MySQLDumpDispatchAction(plugin, mysqld_config)
     snapshot.register('post-mount', act, priority=100)

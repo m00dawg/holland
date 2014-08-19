@@ -31,7 +31,10 @@ class MySQLDumpDispatchAction(object):
                                                       'holland_lvm.pid')
         mycnf_path = os.path.join(datadir, 'my.bootstrap.cnf')
         # generate a my.cnf to pass to the mysqld bootstrap
-        my_conf = generate_server_config(self.mysqld_config, mycnf_path)
+        include_defaults = self.mysqld_config['include-defaults-files']
+        my_conf = generate_server_config(self.mysqld_config,
+                                         mycnf_path,
+                                         include_defaults)
 
         # log-bin is disabled to avoid conflict with the normal mysqld process
         self.mysqldump_plugin.config['mysqldump']['bin-log-position'] = False

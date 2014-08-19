@@ -27,11 +27,15 @@ class InnodbRecoveryAction(object):
         mycnf_path = os.path.join(datadir, 'my.innodb_recovery.cnf')
         self.mysqld_config['log-error'] = os.path.join(datadir,
                                                        'innodb_recovery.log')
-        my_conf = generate_server_config(self.mysqld_config, mycnf_path)
+        include_defaults = self.mysqld_config['include-defaults-files']
+        my_conf = generate_server_config(self.mysqld_config,
+                                         mycnf_path,
+                                         includes=include_defaults)
         
-        mysqld = MySQLServer(mysqld_exe, my_conf)
-        mysqld.start(bootstrap=True,
-                     stdout=self.mysqld_config['log-error'])
+        my_opts = self.mysqld_config['mysqld-options']
+
+        mysqld = MySQLServer(mysqld_exe, my_conf, my_opts)
+        mysqld.start(bootstrap=True)
 
         while mysqld.poll() is None:
             if signal.SIGINT in snapshot_fsm.sigmgr.pending:
