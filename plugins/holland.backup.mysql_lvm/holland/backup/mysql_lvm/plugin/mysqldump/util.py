@@ -89,7 +89,7 @@ def setup_actions(snapshot, config, client, datadir, spooldir, plugin):
                      pathinfo.get_innodb_logdir(), ib_logdir)
 
     if mysqld_config['mysqld-options']:
-        opts = mysqld_config['mysqld-options'].decode('utf8')
+        opts = mysqld_config['mysqld-options'].encode('utf8')
         argv = shlex.split(opts)
         mysqld_config['mysqld-options'] = argv
         del argv

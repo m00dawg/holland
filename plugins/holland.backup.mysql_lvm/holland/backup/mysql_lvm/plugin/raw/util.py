@@ -63,7 +63,7 @@ def setup_actions(snapshot, config, client, snap_datadir, spooldir):
             mysqld_config['innodb-log-files-in-group'] = ib_log_count
 
         if mysqld_config['mysqld-options']:
-            opts = mysqld_config['mysqld-options'].decode('utf8')
+            opts = mysqld_config['mysqld-options'].encode('utf8')
             argv = shlex.split(opts)
             mysqld_config['mysqld-options'] = argv
             del argv
