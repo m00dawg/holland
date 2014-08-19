@@ -44,7 +44,7 @@ def setup_actions(snapshot, config, client, datadir, spooldir, plugin):
     if not mysqld_config['tmpdir']:
         mysqld_config['tmpdir'] = tempfile.gettempdir()
 
-    if client.is_engine_enable('InnoDB'):
+    if client.is_engine_enabled('InnoDB'):
         pathinfo = MySQLPathInfo.from_mysql(client)
         check_innodb(pathinfo)
 
