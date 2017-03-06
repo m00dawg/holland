@@ -27,4 +27,5 @@ These are providers which do something other than backup a MySQL database.
     :maxdepth: 1
 
     provider_plugins/pgdump
+    provider_plugins/rsync
     provider_plugins/example
